@@ -173,8 +173,7 @@ var imageManagerModule = {
 					$("#module-imagemanager .image-info .dimensions .dimension-width").text(responseData.dimensionWidth);
 					$("#module-imagemanager .image-info .dimensions .dimension-height").text(responseData.dimensionHeight);
 					$("#module-imagemanager .image-info .thumbnail").html("<img src='"+responseData.image+"' alt='"+responseData.fileName+"'/>");
-					$("#module-imageManager .image-info .download-image-item").attr("href", responseData.fullImage);
-					console.log(responseData);
+					$("#module-imagemanager .image-info .download-image-item").attr("href", responseData.fullImage);
 					//remove hide class
 					$("#module-imagemanager .image-info").removeClass("hide");
 				}
