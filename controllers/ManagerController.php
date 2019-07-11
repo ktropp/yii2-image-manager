@@ -351,6 +351,7 @@ class ManagerController extends Controller {
 		$return['image'] = \Yii::$app->imagemanager->getImagePath($model->id, 400, 400, "inset");
 		//add extra URL argument to prevent browser caching
 		$return['image'] .= (strpos($return['image'], '?') === false ? '?' : '&' ) . "t=" . time();
+		$return['fullImage'] = \Yii::$app->imagemanager->getImagePath($model->id, $model->imageDetails['width'], $model->imageDetails['height'], "inset");
 
 		//return json encoded
 		return $return;

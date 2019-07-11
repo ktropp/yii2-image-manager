@@ -104,6 +104,7 @@ $this->title = Yii::t('imagemanager','Image manager');
 					<div class="created"></div>
 					<div class="fileSize"></div>
 					<div class="dimensions"><span class="dimension-width"></span> &times; <span class="dimension-height"></span></div>
+					<a class="btn btn-primary btn-xs download-image-item" target="_blank" download href="#"><?=Yii::t('imagemanager','Download')?></a>
 					<?php
 						if (Yii::$app->controller->module->canRemoveImage):
 					?>

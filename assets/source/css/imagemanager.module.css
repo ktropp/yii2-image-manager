@@ -33,4 +33,4 @@
 #module-imagemanager > .row .col-options .image-info .details .fileName{ font-weight: bold; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 #module-imagemanager > .row .col-options .image-info .pick-image-item{ margin-top: 10px; }
 
-#module-imagemanager a.delete-image-item { margin-top: 5px; }
+#module-imagemanager a.delete-image-item, #module-imagemanager a.download-image-item { margin-top: 5px; }
