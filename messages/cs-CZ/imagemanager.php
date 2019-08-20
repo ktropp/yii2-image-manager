@@ -14,5 +14,8 @@ return [
     'Select' => 'Vybrat',
     'Image manager' => 'Image manager',
     'Upload' => 'Nahrát',
-    'Download' => "Stáhnout"
+    'Download' => "Stáhnout",
+    'Edit' => "Upravit",
+    'Edit and select' => "Upravit a vybrat",
+    'Source' => "Zdroj"
 ];

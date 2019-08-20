@@ -14,6 +14,7 @@
 #module-imagemanager > .row .col-overview .item-overview .item .thumbnail .filename{ background-color: rgba(255, 255, 255, 0.9); position: absolute; bottom: 4px; left: 4px; right: 4px; max-height: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding: 0 10px; }
 /*edit column*/
 #module-imagemanager > .row .col-image-editor{ padding-left: 0; display: none; }
+#module-imagemanager > .row .col-data-editor{ padding-left: 0; display: none; }
 /*cropper*/
 #module-imagemanager > .row .col-image-editor .image-cropper .image-wrapper{ max-height: 460px; }
 #module-imagemanager > .row .col-image-editor .image-cropper .image-wrapper img#image-cropper{ max-width: 100%; }
@@ -33,4 +34,6 @@
 #module-imagemanager > .row .col-options .image-info .details .fileName{ font-weight: bold; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 #module-imagemanager > .row .col-options .image-info .pick-image-item{ margin-top: 10px; }
 
-#module-imagemanager a.delete-image-item, #module-imagemanager a.download-image-item { margin-top: 5px; }
+#module-imagemanager .dimensions{
+    margin-bottom: 5px;
+}
