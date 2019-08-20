@@ -16,6 +16,7 @@ return [
     'Upload' => 'Nahrát',
     'Download' => "Stáhnout",
     'Edit' => "Upravit",
-    'Edit and select' => "Upravit a vybrat",
+    'Save' => "Uložit",
+    'Save and select' => "Uložit a vybrat",
     'Source' => "Zdroj"
 ];

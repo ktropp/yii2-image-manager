@@ -42,12 +42,12 @@ $this->title = Yii::t('imagemanager','Image manager');
                 <div class="action-buttons">
                     <a href="#" class="btn btn-primary apply-edit">
                         <i class="fa fa-edit"></i>
-                        <span class="hidden-xs"><?=Yii::t('imagemanager','Edit')?></span>
+                        <span class="hidden-xs"><?=Yii::t('imagemanager','Save')?></span>
                     </a>
                     <?php if($viewMode === "iframe"): ?>
                         <a href="#" class="btn btn-primary apply-edit-select">
                             <i class="fa fa-edit"></i>
-                            <span class="hidden-xs"><?=Yii::t('imagemanager','Edit and select')?></span>
+                            <span class="hidden-xs"><?=Yii::t('imagemanager','Save and select')?></span>
                         </a>
                     <?php endif; ?>
                     <a href="#" class="btn btn-default cancel-edit">
