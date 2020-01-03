@@ -151,9 +151,12 @@ class ManagerController extends Controller {
                     if ($model->save()) {
                         //move file to dir
                         $sSaveFileName = $model->id . "_" . $model->fileHash . "." . $sFileExtension;
-                        //move_uploaded_file($sTempFile, $sMediaPath."/".$sFileName);
-                        //save with Imagine class
-                        Image::getImagine()->open($sTempFile)->save($sMediaPath . "/" . $sSaveFileName);
+                        if($sFileExtension == 'svg'){
+                            move_uploaded_file($sTempFile, $sMediaPath."/".$sFileName);
+                        }else{
+                            //save with Imagine class
+                            Image::getImagine()->open($sTempFile)->save($sMediaPath . "/" . $sSaveFileName);
+                        }
                         $bSuccess = true;
                     }
                 }
