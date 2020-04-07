@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1ae79bbf0196260a4098ad976ed34785",
+    "content-hash": "56650f1f0c7414156d9893eb257a9f07",
     "packages": [
         {
             "name": "bower-asset/inputmask",
@@ -408,11 +408,17 @@
         },
         {
             "name": "noam148/yii2-image-resize",
-            "version": "1.1.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/ktropp/yii2-image-resize/",
-                "reference": "32c5adf7211e06cefc6861a2164855573e968038"
+                "url": "https://github.com/ktropp/yii2-image-resize.git",
+                "reference": "599603843f6f1bff72dbcf6fd43344fadbd90235"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ktropp/yii2-image-resize/zipball/599603843f6f1bff72dbcf6fd43344fadbd90235",
+                "reference": "599603843f6f1bff72dbcf6fd43344fadbd90235",
+                "shasum": ""
             },
             "require": {
                 "yiisoft/yii2": "*",
@@ -443,7 +449,10 @@
                 "resize",
                 "yii2"
             ],
-            "time": "2018-02-18T19:23:04+00:00"
+            "support": {
+                "source": "https://github.com/ktropp/yii2-image-resize/tree/master"
+            },
+            "time": "2020-01-03T09:35:02+00:00"
         },
         {
             "name": "yiisoft/yii2",
@@ -656,6 +665,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "noam148/yii2-image-resize": 20,
         "kartik-v/yii2-widget-fileinput": 20
     },
     "prefer-stable": false,

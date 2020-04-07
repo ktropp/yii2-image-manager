@@ -13,7 +13,7 @@
     ],
     "require": {
         "yiisoft/yii2": "*",
-		"noam148/yii2-image-resize" : "*",
+		"noam148/yii2-image-resize" : "dev-master",
 		"kartik-v/yii2-widget-fileinput": "@dev"
     },
     "autoload": {
@@ -27,7 +27,7 @@
             "url": "https://asset-packagist.org"
         },
         {
-            "type": "git",
+            "type": "github",
             "url": "https://github.com/ktropp/yii2-image-resize/"
         }
     ]
