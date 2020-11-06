@@ -76,8 +76,15 @@ class ImageManagerInputWidget extends InputWidget {
             $field .= Html::textInput($this->attribute, $ImageManager_fileName, ['class' => 'form-control', 'id' => $sFieldNameId, 'readonly' => true]);
             $field .= Html::activeHiddenInput($this->model, $this->attribute, $this->options);
         } else {
-            $field .= Html::textInput($this->name . "_name", null, ['readonly' => true]);
+            $sFieldId = $this->name;
+            $sFieldId = strtolower($sFieldId);
+            $sFieldId = str_replace("][", '-', $sFieldId);
+            $sFieldId = str_replace("[", '-', $sFieldId);
+            $sFieldId = str_replace("]", '', $sFieldId);
+            $sFieldNameId = $sFieldId . "_name";
+            $field .= Html::textInput($this->name . "_name", null, ['readonly' => true, 'id' => $sFieldNameId, 'class' => 'form-control',]);
             $field .= Html::hiddenInput($this->name, $this->value, $this->options);
+
         }
         //end input group
         $sHideClass = $ImageManager_id === null ? 'hide' : '';
@@ -92,8 +99,8 @@ class ImageManagerInputWidget extends InputWidget {
             $sImageSource = isset($mImageManager->id) ? \Yii::$app->imagemanager->getImagePath($mImageManager->id, 500, 500, 'inset') : "";
 
             $field .= '<div class="image-wrapper ' . $sHideClass . '">'
-                    . '<img id="' . $sFieldId . '_image" alt="Thumbnail" class="img-responsive img-preview" src="' . $sImageSource . '">'
-                    . '</div>';
+                . '<img id="' . $sFieldId . '_image" alt="Thumbnail" class="img-responsive img-preview" src="' . $sImageSource . '">'
+                . '</div>';
         }
 
         //close image-manager-input div

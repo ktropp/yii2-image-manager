@@ -91,11 +91,15 @@ class ImageManagerGetPath extends Component {
 			//get image file path
 			$sImageFilePath = $sMediaPath . '/' . $mImageManager->id . '_' . $mImageManager->fileHash . '.' . $sFileExtension;
 			//check file exists
-			if (file_exists($sImageFilePath)) {
-				$return = \Yii::$app->imageresize->getUrl($sImageFilePath, $width, $height, $thumbnailMode, null, $mImageManager->fileName);
-			} else {
-				$return = null; //isset(\Yii::$app->controller->module->assetPublishedUrl) ? \Yii::$app->controller->module->assetPublishedUrl. "/img/img_no-image.png" : null;
-			}
+            if (file_exists($sImageFilePath)) {
+                if(in_array($sFileExtension, ['jpg', 'jpeg', 'png', 'gif', 'svg'])){
+                    $return = \Yii::$app->imageresize->getUrl($sImageFilePath, $width, $height, $thumbnailMode, null, $mImageManager->fileName);
+                }else{
+                    $return = \Yii::$app->imageresize->getUrlFile($sImageFilePath, $mImageManager->fileName);
+                }
+            } else {
+                $return = null; //isset(\Yii::$app->controller->module->assetPublishedUrl) ? \Yii::$app->controller->module->assetPublishedUrl. "/img/img_no-image.png" : null;
+            }
 		}
 		return $return;
 	}
