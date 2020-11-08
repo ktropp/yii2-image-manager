@@ -17,7 +17,7 @@ class Module extends \yii\base\Module {
 	//stylesheet for modal iframe
 	public $cssFiles = [];
 	//allowed Extensions for upload
-	public $allowedFileExtensions = ['jpg', 'jpeg', 'gif', 'png', 'svg'];
+	public $allowedFileExtensions = ['jpg', 'jpeg', 'gif', 'png', 'svg', 'pdf', 'xls', 'xml'];
 	//set assetPublishedUrl
 	public $assetPublishedUrl;
 
