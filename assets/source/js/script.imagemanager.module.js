@@ -104,6 +104,48 @@ var imageManagerModule = {
 
 
     },
+    addFolder: function (){
+        folder_name = $("#input-imagemanager-folder").val();
+        folder = $("#folder").val();
+        if(folder_name){
+            $.ajax({
+                url: imageManagerModule.baseUrl+"/add-folder",
+                type: "POST",
+                data: {
+                    folder_name: folder_name,
+                    folder: folder,
+                    _csrf: $('meta[name=csrf-token]').prop('content')
+                },
+                dataType: "json",
+                success: function (responseData, textStatus, jqXHR) {
+                    location.reload();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert("Error: can't delete item");
+                }
+            });
+        }
+    },
+    deleteFolder: function (){
+        folder = $("#folder").val();
+        if(folder){
+            $.ajax({
+                url: imageManagerModule.baseUrl+"/delete-folder",
+                type: "POST",
+                data: {
+                    folder: folder,
+                    _csrf: $('meta[name=csrf-token]').prop('content')
+                },
+                dataType: "json",
+                success: function (responseData, textStatus, jqXHR) {
+                    window.location.replace($(".tree-all").attr("href"));
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert("Error: can't delete item");
+                }
+            });
+        }
+    },
     //delete the selected image
     deleteSelectedImage: function(){
         //confirm message
@@ -170,9 +212,22 @@ var imageManagerModule = {
                     $("#module-imagemanager .image-info .fileName").text(responseData.fileName).attr("title",responseData.fileName);
                     $("#module-imagemanager .image-info .created").text(responseData.created);
                     $("#module-imagemanager .image-info .fileSize").text(responseData.fileSize);
-                    $("#module-imagemanager .image-info .dimensions .dimension-width").text(responseData.dimensionWidth);
-                    $("#module-imagemanager .image-info .dimensions .dimension-height").text(responseData.dimensionHeight);
-                    $("#module-imagemanager .image-info .thumbnail").html("<img src='"+responseData.image+"' alt='"+responseData.fileName+"'/>");
+                    if($("#module-imagemanager .image-info .alt").length > 0){
+                        $("#module-imagemanager .image-info .alt").text(responseData.alt);
+                    }
+                    if(responseData.type == 'img'){
+                        $("#module-imagemanager .image-info .dimensions .dimension-width").text(responseData.dimensionWidth);
+                        $("#module-imagemanager .image-info .dimensions .dimension-height").text(responseData.dimensionHeight);
+                        $("#module-imagemanager .image-info .dimensions").show();
+                        $("#module-imagemanager .image-info .thumbnail").html("<img src='"+responseData.image+"' alt='"+responseData.fileName+"'/>");
+                        $("#module-imagemanager .image-info .thumbnail").show();
+                        $("#module-imagemanager .image-info .crop-image-item").show();
+                    }else{
+                        $("#module-imagemanager .image-info .dimensions").hide();
+                        $("#module-imagemanager .image-info .thumbnail").hide();
+                        $("#module-imagemanager .image-info .crop-image-item").hide();
+                    }
+
                     $("#module-imagemanager .image-info .download-image-item").attr("href", responseData.fullImage);
                     //remove hide class
                     $("#module-imagemanager .image-info").removeClass("hide");
@@ -290,6 +345,7 @@ var imageManagerModule = {
             //show editer / hide overview
             $("#module-imagemanager > .row .col-data-editor").show();
             $("#module-imagemanager > .row .col-overview").hide();
+
         },
         //close editor block
         close: function(){
@@ -311,7 +367,12 @@ var imageManagerModule = {
                     },
                     dataType: "json",
                     success: function (responseData, textStatus, jqXHR) {
-                        $("#data_editor_source").val(responseData.source);
+                        $("#data_editor_source").val(responseData.model.source);
+                        $("#data_editor_alt").val(responseData.model.alt);
+
+                        if($("#select-imagemanager-folder").length > 0){
+                            $("#select-imagemanager-folder").val(responseData.folder).trigger('change');
+                        }
                         //open editor
                         imageManagerModule.data_editor.open();
                     },
@@ -331,6 +392,8 @@ var imageManagerModule = {
             if(imageManagerModule.selectedImage !== null){
                 //set image in cropper
                 var source = $("#data_editor_source").val();
+                var alt = $("#data_editor_alt").val();
+                var folder = $("#select-imagemanager-folder").val();
                 //call action by ajax
                 $.ajax({
                     url: imageManagerModule.baseUrl+"/edit",
@@ -338,6 +401,8 @@ var imageManagerModule = {
                     data: {
                         ImageManager_id: imageManagerModule.selectedImage.id,
                         source: source,
+                        alt: alt,
+                        folder: folder,
                         _csrf: $('meta[name=csrf-token]').prop('content')
                     },
                     dataType: "json",
@@ -427,6 +492,15 @@ $(document).ready(function () {
     //on click apply crop
     $(document).on("click", "#module-imagemanager .image-editor .apply-edit-select", function (){
         imageManagerModule.data_editor.applyEdit(true);
+        return false;
+    });
+    //on click folder add
+    $(document).on("click", "#module-imagemanager .add-folder", function (){
+        imageManagerModule.addFolder();
+        return false;
+    });
+    $(document).on("click", "#module-imagemanager .delete-folder", function (){
+        imageManagerModule.deleteFolder();
         return false;
     });
 });

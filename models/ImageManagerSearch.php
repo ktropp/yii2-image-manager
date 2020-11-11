@@ -2,10 +2,12 @@
 
 namespace noam148\imagemanager\models;
 
+use common\models\ImagemanagerFolder;
+use common\models\ImagemanagerFolderFile;
+use noam148\imagemanager\models\ImageManager;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use noam148\imagemanager\models\ImageManager;
 use noam148\imagemanager\Module;
 
 /**
@@ -13,15 +15,15 @@ use noam148\imagemanager\Module;
  */
 class ImageManagerSearch extends ImageManager
 {
-	public $globalSearch;
-	
+    public $globalSearch, $folder;
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['globalSearch'], 'safe'],
+            [['globalSearch', 'folder'], 'safe'],
         ];
     }
 
@@ -49,10 +51,10 @@ class ImageManagerSearch extends ImageManager
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-			'pagination' => [
-				'pagesize' => 100,
-			],
-			'sort'=> ['defaultOrder' => ['created'=>SORT_DESC]]
+            'pagination' => [
+                'pagesize' => 100,
+            ],
+            'sort'=> ['defaultOrder' => ['created'=>SORT_DESC]]
         ]);
 
         $this->load($params);
@@ -72,7 +74,15 @@ class ImageManagerSearch extends ImageManager
 
         $query->orFilterWhere(['like', 'fileName', $this->globalSearch])
             ->orFilterWhere(['like', 'created', $this->globalSearch])
-			->orFilterWhere(['like', 'modified', $this->globalSearch]);
+            ->orFilterWhere(['like', 'modified', $this->globalSearch]);
+
+        if(class_exists('common\models\ImagemanagerFolder')){
+            if($this->folder){
+                $query->innerJoin(ImagemanagerFolderFile::tableName(), ImagemanagerFolderFile::tableName().".file_ID=" . ImageManager::tableName().".id")
+                    ->andFilterWhere([ImagemanagerFolderFile::tableName().".folder_ID" => $this->folder]);
+            }
+        }
+
 
         return $dataProvider;
     }

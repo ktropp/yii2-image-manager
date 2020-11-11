@@ -2,6 +2,8 @@
 
 namespace noam148\imagemanager\controllers;
 
+use common\models\ImagemanagerFolder;
+use common\models\ImagemanagerFolderFile;
 use Yii;
 use noam148\imagemanager\models\ImageManager;
 use noam148\imagemanager\models\ImageManagerSearch;
@@ -151,11 +153,11 @@ class ManagerController extends Controller {
                     if ($model->save()) {
                         //move file to dir
                         $sSaveFileName = $model->id . "_" . $model->fileHash . "." . $sFileExtension;
-                        if($sFileExtension == 'svg'){
-                            move_uploaded_file($sTempFile, $sMediaPath."/".$sSaveFileName);
-                        }else{
+                        if(in_array($sFileExtension, ['jpg', 'jpeg', 'png', 'gif'])){
                             //save with Imagine class
                             Image::getImagine()->open($sTempFile)->save($sMediaPath . "/" . $sSaveFileName);
+                        }else{
+                            move_uploaded_file($sTempFile, $sMediaPath."/".$sSaveFileName);
                         }
                         $bSuccess = true;
                     }
@@ -232,7 +234,7 @@ class ManagerController extends Controller {
                     $imageCanvasWidth = $imageOriginalWidth;
                     $imageCanvasHeight = $imageOriginalHeight;
 
-                    // update canvas width if X position of croparea is lower than 0 
+                    // update canvas width if X position of croparea is lower than 0
                     if($aCropData['x'] < 0){
                         //set x postion to Absolute value
                         $iAbsoluteXpos = abs($aCropData['x']);
@@ -255,7 +257,7 @@ class ManagerController extends Controller {
                         }
                     }
 
-                    // update canvas height if Y position of croparea is lower than 0 
+                    // update canvas height if Y position of croparea is lower than 0
                     if($aCropData['y'] < 0){
                         //set y postion to Absolute value
                         $iAbsoluteYpos = abs($aCropData['y']);
@@ -292,7 +294,7 @@ class ManagerController extends Controller {
 //                    echo "canvas: ". $imageCanvasWidth ." x ".$imageCanvasHeight ."<br />";
 //                    echo "img pos x: ". $imageOriginalPositionX ." y ".$imageOriginalPositionY ."<br />";
 //                    die();
-//                       
+//
                     //todo: check if rotaded resize canvas (http://stackoverflow.com/questions/9971230/calculate-rotated-rectangle-size-from-known-bounding-box-coordinates)
 
                     // merge current image in canvas, crop image and save
@@ -345,11 +347,26 @@ class ManagerController extends Controller {
         //get post
         $ImageManager_id = Yii::$app->request->post("ImageManager_id");
         $source = Yii::$app->request->post("source");
+        $alt = Yii::$app->request->post("alt");
+        $folder_ID = Yii::$app->request->post('folder');
         //get details
         $modelOriginal = $this->findModel($ImageManager_id);
 
         if($modelOriginal){
-            $modelOriginal->source = $source;
+            if($source)
+                $modelOriginal->source = $source;
+
+            if($alt)
+                $modelOriginal->alt = $alt;
+
+            if($folder_ID){
+                $folder = ImagemanagerFolderFile::findOne(['file_ID' => $ImageManager_id]);
+                if(!$folder)
+                    $folder = new ImagemanagerFolderFile();
+                $folder->folder_ID = $folder_ID;
+                $folder->file_ID = $ImageManager_id;
+                $folder->save();
+            }
 
             $modelOriginal->save();
 
@@ -358,6 +375,57 @@ class ManagerController extends Controller {
 
         //echo return json encoded
         return $return;
+    }
+
+    public function actionAddFolder() {
+        //return
+        $return = null;
+        //disable Csrf
+        Yii::$app->controller->enableCsrfValidation = false;
+        //set response header
+        Yii::$app->getResponse()->format = Response::FORMAT_JSON;
+        //set media path
+        $sMediaPath = \Yii::$app->imagemanager->mediaPath;
+        //get post
+        $folder_name = Yii::$app->request->post("folder_name");
+        $folder_ID = Yii::$app->request->post("folder");
+        //get details
+        $folder = ImagemanagerFolder::findOne(['ID' => $folder_ID]);
+
+        if($folder_name){
+            $add_folder = new ImagemanagerFolder();
+            $add_folder->name = $folder_name;
+            $add_folder->parent_ID = 0;
+            if($folder){
+                $add_folder->parent_ID = $folder->ID;
+            }
+            $add_folder->save();
+            return $add_folder->ID;
+        }
+
+        return null;
+    }
+
+
+    public function actionDeleteFolder() {
+        //return
+        $return = null;
+        //disable Csrf
+        Yii::$app->controller->enableCsrfValidation = false;
+        //set response header
+        Yii::$app->getResponse()->format = Response::FORMAT_JSON;
+        //set media path
+        $sMediaPath = \Yii::$app->imagemanager->mediaPath;
+        //get post
+        $folder_ID = Yii::$app->request->post("folder");
+        //get details
+        $folder = ImagemanagerFolder::findOne(['ID' => $folder_ID]);
+
+        if($folder){
+            return $folder->delete();
+        }
+
+        return null;
     }
 
     /**
@@ -387,6 +455,15 @@ class ManagerController extends Controller {
         $return['image'] .= (strpos($return['image'], '?') === false ? '?' : '&' ) . "t=" . time();
 
         $return['fullImage'] = \Yii::$app->imagemanager->getImagePath($model->id, $model->imageDetails['width'], $model->imageDetails['height'], "inset");
+        $sFileExtension = pathinfo($model->fileName, PATHINFO_EXTENSION);
+        $return['extension'] = $sFileExtension;
+        $return['type'] = 'file';
+        if(in_array($sFileExtension, ['jpg', 'jpeg', 'png', 'gif', 'svg'])){
+            $return['type'] = 'img';
+        }
+        if (class_exists('common\models\ImagemanagerFolder')){
+            $return['alt'] = $model->alt;
+        }
 
         //return json encoded
         return $return;
@@ -424,8 +501,16 @@ class ManagerController extends Controller {
         $ImageManager_id = Yii::$app->request->post("ImageManager_id");
         //get details
         $model = $this->findModel($ImageManager_id);
+
+        $folder = false;
+        if (class_exists('common\models\ImagemanagerFolder')){
+            $folder = ImagemanagerFolderFile::findOne(['file_ID' => $ImageManager_id]);
+            if($folder){
+                $folder = $folder->folder_ID;
+            }
+        }
         //set return
-        $return = $model;
+        $return = ['model' => $model, 'folder' => $folder];
         //return json encoded
         return $return;
     }

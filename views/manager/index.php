@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ListView;
 use yii\widgets\Pjax;
 use kartik\file\FileInput;
+use kartik\select2\Select2;
 
 $this->title = Yii::t('imagemanager','Image manager');
 
@@ -35,10 +36,33 @@ $this->title = Yii::t('imagemanager','Image manager');
         </div>
         <div class="col-xs-6 col-sm-10 col-data-editor">
             <div class="image-editor">
-                <div class="form-group">
-                    <label for="data_editor_source"><?=Yii::t('imagemanager','Source')?></label>
-                    <input type="text" class="form-control" name="data_editor_source" id="data_editor_source">
-                </div>
+                <?php if(class_exists('common\models\ImagemanagerFolder')): ?>
+                    <div class="form-group">
+                        <label for="data_editor_alt"><?=Yii::t('imagemanager','Název (alt)')?></label>
+                        <input type="text" class="form-control" name="data_editor_alt" id="data_editor_alt">
+                    </div>
+                    <div>
+                        <?=
+                        Select2::widget([
+                            'name' => 'select-imagemanager-folder',
+                            'data' => \yii\helpers\ArrayHelper::map(\common\models\ImagemanagerFolder::find()->all(), "ID", "name"),
+                            'options' => [
+                                'placeholder' => 'Vybrat složku',
+                                'id' => 'select-imagemanager-folder'
+                            ],
+                            'pluginOptions' => [
+                                'allowClear' => true,
+                            ]
+                        ]);
+                        ?>
+                        <br>
+                    </div>
+                <?php else: ?>
+                    <div class="form-group">
+                        <label for="data_editor_source"><?=Yii::t('imagemanager','Source')?></label>
+                        <input type="text" class="form-control" name="data_editor_source" id="data_editor_source">
+                    </div>
+                <?php endif; ?>
                 <div class="action-buttons">
                     <a href="#" class="btn btn-primary apply-edit">
                         <i class="fa fa-edit"></i>
@@ -57,7 +81,52 @@ $this->title = Yii::t('imagemanager','Image manager');
                 </div>
             </div>
         </div>
-        <div class="col-xs-6 col-sm-10 col-overview">
+        <?php if(class_exists('common\models\ImagemanagerFolder')): ?>
+            <input type="hidden" id="folder" value="<?= $searchModel->folder; ?>">
+            <div class="col-xs-6 col-sm-2 col-tree">
+                <div class="form-group">
+                    <?=Html::textInput('input-imagemanager-folder', null, ['id'=>'input-imagemanager-folder', 'class'=>'form-control', 'placeholder'=>'Jméno složky'])?>
+                </div>
+                <a class="btn btn-primary btn-block add-folder" href="">Přidat složku</a>
+                <?php if($searchModel->folder): ?>
+                    <a class="btn btn-danger btn-block delete-folder" href="">Odstranit složku</a>
+                <?php endif; ?>
+                <h3>Složky</h3>
+                <?php
+                $folders = \common\models\ImagemanagerFolder::find()->where(['parent_ID' => 0])->all();
+
+                function showChildren($folder, $active){
+                    $html = "";
+                    if($folder->children){
+                        foreach($folder->children as $child){
+                            $html .= '<ul>';
+                            $html .= '<li>';
+                            $class = "";
+                            if($active == $folder->ID)
+                                $class = 'active';
+                            $html .= '<a class="' . $class . '" href="' . Url::to(['manager/index', 'ImageManagerSearch[folder]' => $child->ID]) . '">' . $child->name . ' ('.  $folder->getFiles()->count() . ')</a>';
+                            $html .= showChildren($child, $active);
+                            $html .= '</li>';
+                            $html .= '</ul>';
+                        }
+                        return $html;
+                    }else{
+                        return "";
+                    }
+                }
+                ?>
+                <p><a class="tree-all" href="<?= Url::to(['manager/index']); ?>">Zobrazit vše (<?= \noam148\imagemanager\models\ImageManager::find()->count(); ?>)</a></p>
+                <ul class="imagemanager-tree">
+                    <?php foreach($folders as $folder): ?>
+                        <li>
+                            <a class="<?php if((int) $searchModel->folder == $folder->ID): ?>active<?php endif; ?>" href="<?= Url::to(['manager/index', 'ImageManagerSearch[folder]' => $folder->ID]); ?>"><?= $folder->name; ?> (<?= $folder->getFiles()->count(); ?>)</a>
+                            <?= showChildren($folder, $searchModel->folder); ?>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
+        <div class="col-xs-6 <?php if(class_exists('common\models\ImagemanagerFolder')): ?>col-sm-8<?php else: ?>col-sm-10<?php endif; ?> col-overview">
             <?php Pjax::begin([
                 'id'=>'pjax-mediamanager',
                 'timeout'=>'5000'
@@ -129,6 +198,9 @@ $this->title = Yii::t('imagemanager','Image manager');
                 </div>
                 <div class="details">
                     <div class="fileName"></div>
+                    <?php if(class_exists('common\models\ImagemanagerFolder')): ?>
+                        <div class="alt"></div>
+                    <?php endif; ?>
                     <div class="created"></div>
                     <div class="fileSize"></div>
                     <div class="dimensions"><span class="dimension-width"></span> &times; <span class="dimension-height"></span></div>
