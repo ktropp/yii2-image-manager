@@ -7,5 +7,11 @@
     <?php else: ?>
         <img src="<?=\Yii::$app->imagemanager->getImagePath($model->id, 300, 300)?>" alt="<?=$model->fileName?>">
     <?php endif; ?>
-    <div class="filename"><?=$model->fileName?></div>
+    <?php
+    $name = $model->fileName;
+    if($model->alt){
+        $name = $model->alt . " (" . $model->fileName . ")";
+    }
+    ?>
+    <div class="filename" title="<?= $name; ?>"><?=$name?></div>
 </div>

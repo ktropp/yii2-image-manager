@@ -214,6 +214,7 @@ var imageManagerModule = {
                     $("#module-imagemanager .image-info .fileSize").text(responseData.fileSize);
                     if($("#module-imagemanager .image-info .alt").length > 0){
                         $("#module-imagemanager .image-info .alt").text(responseData.alt);
+                        $("#module-imagemanager .image-info .fileName").text(responseData.alt + " (" + responseData.fileName + ")").attr("title",responseData.alt + "(" + responseData.fileName + ")");
                     }
                     if(responseData.type == 'img'){
                         $("#module-imagemanager .image-info .dimensions .dimension-width").text(responseData.dimensionWidth);

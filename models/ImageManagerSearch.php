@@ -77,6 +77,9 @@ class ImageManagerSearch extends ImageManager
             ->orFilterWhere(['like', 'modified', $this->globalSearch]);
 
         if(class_exists('common\models\ImagemanagerFolder')){
+            if($this->globalSearch){
+                $query->orFilterWhere(['like', 'alt', $this->globalSearch]);
+            }
             if($this->folder){
                 $query->innerJoin(ImagemanagerFolderFile::tableName(), ImagemanagerFolderFile::tableName().".file_ID=" . ImageManager::tableName().".id")
                     ->andFilterWhere([ImagemanagerFolderFile::tableName().".folder_ID" => $this->folder]);
