@@ -37,3 +37,13 @@
 #module-imagemanager .dimensions{
     margin-bottom: 5px;
 }
+
+#module-imagemanager .imagemanager-tree{
+    padding-left: 15px;
+}
+
+#module-imagemanager .imagemanager-tree a.active{
+    text-decoration: underline;
+    color: black;
+    font-weight: bold;
+}
