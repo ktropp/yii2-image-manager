@@ -95,7 +95,7 @@ $this->title = Yii::t('imagemanager','Image manager');
                 <?php
                 $folders = \common\models\ImagemanagerFolder::find()->where(['parent_ID' => 0])->all();
 
-                function showChildren($folder, $active){
+                function showChildren($folder, $active, $viewMode, $inputFieldId){
                     $html = "";
                     if($folder->children){
                         foreach($folder->children as $child){
@@ -104,8 +104,8 @@ $this->title = Yii::t('imagemanager','Image manager');
                             $class = "";
                             if($active == $folder->ID)
                                 $class = 'active';
-                            $html .= '<a class="' . $class . '" href="' . Url::to(['manager/index', 'ImageManagerSearch[folder]' => $child->ID]) . '">' . $child->name . ' ('.  $folder->getFiles()->count() . ')</a>';
-                            $html .= showChildren($child, $active);
+                            $html .= '<a class="' . $class . '" href="' . Url::to(['manager/index', 'ImageManagerSearch[folder]' => $child->ID, 'view-mode' => $viewMode, 'input-id' => $inputFieldId]) . '">' . $child->name . ' ('.  $folder->getFiles()->count() . ')</a>';
+                            $html .= showChildren($child, $active, $viewMode, $inputFieldId);
                             $html .= '</li>';
                             $html .= '</ul>';
                         }
@@ -115,12 +115,12 @@ $this->title = Yii::t('imagemanager','Image manager');
                     }
                 }
                 ?>
-                <p><a class="tree-all" href="<?= Url::to(['manager/index']); ?>">Zobrazit vše (<?= \noam148\imagemanager\models\ImageManager::find()->count(); ?>)</a></p>
+                <p><a class="tree-all" href="<?= Url::to(['manager/index', 'view-mode' => $viewMode, 'input-id' => $inputFieldId]); ?>">Zobrazit vše (<?= \noam148\imagemanager\models\ImageManager::find()->count(); ?>)</a></p>
                 <ul class="imagemanager-tree">
                     <?php foreach($folders as $folder): ?>
                         <li>
-                            <a class="<?php if((int) $searchModel->folder == $folder->ID): ?>active<?php endif; ?>" href="<?= Url::to(['manager/index', 'ImageManagerSearch[folder]' => $folder->ID]); ?>"><?= $folder->name; ?> (<?= $folder->getFiles()->count(); ?>)</a>
-                            <?= showChildren($folder, $searchModel->folder); ?>
+                            <a class="<?php if((int) $searchModel->folder == $folder->ID): ?>active<?php endif; ?>" href="<?= Url::to(['manager/index', 'ImageManagerSearch[folder]' => $folder->ID, 'view-mode' => $viewMode, 'input-id' => $inputFieldId]); ?>"><?= $folder->name; ?> (<?= $folder->getFiles()->count(); ?>)</a>
+                            <?= showChildren($folder, $searchModel->folder, $viewMode, $inputFieldId); ?>
                         </li>
                     <?php endforeach; ?>
                 </ul>

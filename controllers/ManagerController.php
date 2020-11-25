@@ -106,6 +106,7 @@ class ManagerController extends Controller {
             'dataProvider' => $dataProvider,
             'viewMode' => $viewMode,
             'selectType' => $selectType,
+            'inputFieldId' => $inputFieldId,
         ]);
     }
 
