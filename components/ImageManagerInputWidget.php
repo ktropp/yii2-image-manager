@@ -82,7 +82,14 @@ class ImageManagerInputWidget extends InputWidget {
             $sFieldId = str_replace("[", '-', $sFieldId);
             $sFieldId = str_replace("]", '', $sFieldId);
             $sFieldNameId = $sFieldId . "_name";
-            $field .= Html::textInput($this->name . "_name", null, ['readonly' => true, 'id' => $sFieldNameId, 'class' => 'form-control',]);
+
+            $ImageManager_fileName = null;
+            $mImageManager = ImageManager::findOne($this->value);
+            if ($mImageManager !== null) {
+                $ImageManager_fileName = $mImageManager->fileName;
+            }
+
+            $field .= Html::textInput($this->name . "_name", $ImageManager_fileName, ['readonly' => true, 'id' => $sFieldNameId, 'class' => 'form-control',]);
             $field .= Html::hiddenInput($this->name, $this->value, $this->options);
 
         }
