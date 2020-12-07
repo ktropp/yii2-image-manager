@@ -93,7 +93,7 @@ $this->title = Yii::t('imagemanager','Image manager');
                 <?php endif; ?>
                 <h3>Složky</h3>
                 <?php
-                $folders = \common\models\ImagemanagerFolder::find()->where(['parent_ID' => 0])->all();
+                $folders = \common\models\ImagemanagerFolder::find()->where(['parent_ID' => 0])->andWhere(['AND', ['!=', 'name', 'Faktury'], ['!=', 'name', 'Dobropisy']])->all();
 
                 function showChildren($folder, $active, $viewMode, $inputFieldId){
                     $html = "";
