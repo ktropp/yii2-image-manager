@@ -102,7 +102,7 @@ $this->title = Yii::t('imagemanager','Image manager');
                             $html .= '<ul>';
                             $html .= '<li>';
                             $class = "";
-                            if($active == $folder->ID)
+                            if($active == $child->ID)
                                 $class = 'active';
                             $html .= '<a class="' . $class . '" href="' . Url::to(['manager/index', 'ImageManagerSearch[folder]' => $child->ID, 'view-mode' => $viewMode, 'input-id' => $inputFieldId]) . '">' . $child->name . ' ('.  $folder->getFiles()->count() . ')</a>';
                             $html .= showChildren($child, $active, $viewMode, $inputFieldId);
@@ -159,6 +159,9 @@ $this->title = Yii::t('imagemanager','Image manager');
                 ],
                 'pluginOptions' => [
                     'uploadUrl' => Url::to(['manager/upload']),
+                    'uploadExtraData' => [
+                        'folder_id' => Yii::$app->request->get('ImageManagerSearch')['folder'],
+                    ],
                     'allowedFileExtensions' => \Yii::$app->controller->module->allowedFileExtensions,
                     'uploadAsync' => false,
                     'showPreview' => false,

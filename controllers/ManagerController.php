@@ -160,6 +160,22 @@ class ManagerController extends Controller {
                         }else{
                             move_uploaded_file($sTempFile, $sMediaPath."/".$sSaveFileName);
                         }
+
+                        if(class_exists('common\models\ImagemanagerFolder')){
+                            if(Yii::$app->request->post('folder_id') !== null){
+                                $folder_ID = (int) Yii::$app->request->post('folder_id');
+                                if($folder_ID){
+                                    $folder = ImagemanagerFolderFile::findOne(['file_ID' => $model->id]);
+                                    if(!$folder)
+                                        $folder = new ImagemanagerFolderFile();
+                                    $folder->folder_ID = $folder_ID;
+                                    $folder->file_ID = $model->id;
+                                    $folder->save();
+                                }
+                            }
+                        }
+
+
                         $bSuccess = true;
                     }
                 }
