@@ -47,3 +47,14 @@
     color: black;
     font-weight: bold;
 }
+
+#module-imagemanager .cropper-aspect-inputs{
+    display: flex;
+    align-items: center;
+    max-width: 200px;
+}
+
+#module-imagemanager .cropper-aspect-inputs span{
+    display: inline-block;
+    margin: 0 10px;
+}

@@ -295,6 +295,9 @@ var imageManagerModule = {
                 alert("Error: image can't crop, no image isset set");
             }
         },
+        changeAspectRatio: function(aspectRatio){
+            $('#module-imagemanager > .row .col-image-editor .image-cropper .image-wrapper img#image-cropper').cropper('setAspectRatio', aspectRatio);
+        },
         //apply crop
         applyCrop: function(pickAfterCrop){
             //set propertie if not set
@@ -503,6 +506,16 @@ $(document).ready(function () {
     $(document).on("click", "#module-imagemanager .delete-folder", function (){
         imageManagerModule.deleteFolder();
         return false;
+    });
+
+    $(document).on('change', '#module-imagemanager .cropper-aspect-inputs input', function(){
+        var width = $('#input-imagemanager-aspect-width').val();
+        var height = $('#input-imagemanager-aspect-height').val();
+        if(width && height){
+            imageManagerModule.editor.changeAspectRatio(parseInt(width)/parseInt(height));
+        }else{
+            imageManagerModule.editor.changeAspectRatio(0);
+        }
     });
 });
 

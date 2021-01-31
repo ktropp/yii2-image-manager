@@ -16,6 +16,16 @@ $this->title = Yii::t('imagemanager','Image manager');
                 <div class="image-wrapper">
                     <img id="image-cropper" />
                 </div>
+                <br>
+                <div class="cropper-aspect">
+                    Poměr stran:
+                    <div class="cropper-aspect-inputs">
+                        <?=Html::textInput('input-imagemanager-aspect-width', null, ['id'=>'input-imagemanager-aspect-width', 'class'=>'form-control', 'placeholder'=>'16'])?>
+                        <span>:</span>
+                        <?=Html::textInput('input-imagemanager-aspect-height', null, ['id'=>'input-imagemanager-aspect-height', 'class'=>'form-control', 'placeholder'=>'9'])?>
+                    </div>
+                </div>
+                <br>
                 <div class="action-buttons">
                     <a href="#" class="btn btn-primary apply-crop">
                         <i class="fa fa-crop"></i>
