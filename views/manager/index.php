@@ -170,7 +170,7 @@ $this->title = Yii::t('imagemanager','Image manager');
                 'pluginOptions' => [
                     'uploadUrl' => Url::to(['manager/upload']),
                     'uploadExtraData' => [
-                        'folder_id' => Yii::$app->request->get('ImageManagerSearch') ? Yii::$app->request->get('ImageManagerSearch')['folder'] : '',
+                        'folder_id' => isset(Yii::$app->request->get('ImageManagerSearch')['folder']) ? Yii::$app->request->get('ImageManagerSearch')['folder'] : '',
                     ],
                     'allowedFileExtensions' => \Yii::$app->controller->module->allowedFileExtensions,
                     'uploadAsync' => false,

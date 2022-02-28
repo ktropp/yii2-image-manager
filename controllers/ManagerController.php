@@ -156,7 +156,28 @@ class ManagerController extends Controller {
                         $sSaveFileName = $model->id . "_" . $model->fileHash . "." . $sFileExtension;
                         if(in_array($sFileExtension, ['jpg', 'jpeg', 'png', 'gif'])){
                             //save with Imagine class
-                            Image::getImagine()->open($sTempFile)->save($sMediaPath . "/" . $sSaveFileName);
+                            $image = Image::getImagine()->open($sTempFile);
+
+                            //orientation fix
+                            if($sFileExtension != 'png'){
+                                $exif = @exif_read_data($sTempFile);
+                                if (!empty($exif['Orientation'])) {
+                                    switch ($exif['Orientation']) {
+                                        case 3:
+                                            $image->rotate(180);
+                                            break;
+                                        case 6:
+                                            $image->rotate(90);
+                                            break;
+
+                                        case 8:
+                                            $image->rotate(-90);
+                                            break;
+                                    }
+                                }
+                            }
+
+                            $image->save($sMediaPath . "/" . $sSaveFileName);
                         }else{
                             move_uploaded_file($sTempFile, $sMediaPath."/".$sSaveFileName);
                         }
