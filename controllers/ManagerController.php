@@ -154,7 +154,7 @@ class ManagerController extends Controller {
                     if ($model->save()) {
                         //move file to dir
                         $sSaveFileName = $model->id . "_" . $model->fileHash . "." . $sFileExtension;
-                        if(in_array($sFileExtension, ['jpg', 'jpeg', 'png', 'gif'])){
+                        if(in_array($sFileExtension, ['jpg', 'jpeg', 'JPG', 'png', 'gif'])){
                             //save with Imagine class
                             $image = Image::getImagine()->open($sTempFile);
 
@@ -369,6 +369,58 @@ class ManagerController extends Controller {
         return $return;
     }
 
+    public function actionRotateClockwise(){
+        //return
+        $return = null;
+        //disable Csrf
+        Yii::$app->controller->enableCsrfValidation = false;
+        //set response header
+        Yii::$app->getResponse()->format = Response::FORMAT_JSON;
+        //set media path
+        $sMediaPath = \Yii::$app->imagemanager->mediaPath;
+        //get post
+        $ImageManager_id = Yii::$app->request->post("ImageManager_id");
+        //get details
+        $modelOriginal = $this->findModel($ImageManager_id);
+        //check if path is not null
+        if ($modelOriginal->imagePathPrivate !== null) {
+            $imageOriginal = Image::getImagine()->open($modelOriginal->imagePathPrivate);
+            $imageOriginal->rotate(90);
+            $imageOriginal->save($modelOriginal->imagePathPrivate);
+
+            return $modelOriginal->id;
+        }
+
+        //echo return json encoded
+        return $return;
+    }
+
+    public function actionRotateCounterClockwise(){
+        //return
+        $return = null;
+        //disable Csrf
+        Yii::$app->controller->enableCsrfValidation = false;
+        //set response header
+        Yii::$app->getResponse()->format = Response::FORMAT_JSON;
+        //set media path
+        $sMediaPath = \Yii::$app->imagemanager->mediaPath;
+        //get post
+        $ImageManager_id = Yii::$app->request->post("ImageManager_id");
+        //get details
+        $modelOriginal = $this->findModel($ImageManager_id);
+        //check if path is not null
+        if ($modelOriginal->imagePathPrivate !== null) {
+            $imageOriginal = Image::getImagine()->open($modelOriginal->imagePathPrivate);
+            $imageOriginal->rotate(-90);
+            $imageOriginal->save($modelOriginal->imagePathPrivate);
+
+            return $modelOriginal->id;
+        }
+
+        //echo return json encoded
+        return $return;
+    }
+
     /**
      * Edit image data.
      * @return mixed
@@ -496,7 +548,7 @@ class ManagerController extends Controller {
         $sFileExtension = pathinfo($model->fileName, PATHINFO_EXTENSION);
         $return['extension'] = $sFileExtension;
         $return['type'] = 'file';
-        if(in_array($sFileExtension, ['jpg', 'jpeg', 'png', 'gif', 'svg'])){
+        if(in_array($sFileExtension, ['jpg', 'jpeg', 'JPG', 'png', 'gif', 'svg'])){
             $return['type'] = 'img';
         }
         if (class_exists('common\models\ImagemanagerFolder')){

@@ -340,6 +340,68 @@ var imageManagerModule = {
             }else{
                 alert("Error: image can't crop, no image isset set");
             }
+        },
+        rotateClockwise: function (){
+            //check if isset image
+            if(imageManagerModule.selectedImage !== null){
+                //call action by ajax
+                $.ajax({
+                    url: imageManagerModule.baseUrl+"/rotate-clockwise",
+                    type: "POST",
+                    data: {
+                        ImageManager_id: imageManagerModule.selectedImage.id,
+                        _csrf: $('meta[name=csrf-token]').prop('content')
+                    },
+                    dataType: "json",
+                    success: function (responseData, textStatus, jqXHR) {
+                        //set rotated image
+                        if(responseData !== null){
+                            //set new image
+                            imageManagerModule.selectImage(responseData);
+                            //reload pjax container
+                            $.pjax.reload('#pjax-mediamanager', {push: false, replace: false, timeout: 5000, scrollTo: false});
+                        }
+                        //close editor
+                        imageManagerModule.editor.close();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("Error: item is not rotated");
+                    }
+                });
+            }else{
+                alert("Error: image can't rotate, no image isset set");
+            }
+        },
+        rotateCounterClockwise: function (){
+            //check if isset image
+            if(imageManagerModule.selectedImage !== null){
+                //call action by ajax
+                $.ajax({
+                    url: imageManagerModule.baseUrl+"/rotate-counter-clockwise",
+                    type: "POST",
+                    data: {
+                        ImageManager_id: imageManagerModule.selectedImage.id,
+                        _csrf: $('meta[name=csrf-token]').prop('content')
+                    },
+                    dataType: "json",
+                    success: function (responseData, textStatus, jqXHR) {
+                        //set rotated image
+                        if(responseData !== null){
+                            //set new image
+                            imageManagerModule.selectImage(responseData);
+                            //reload pjax container
+                            $.pjax.reload('#pjax-mediamanager', {push: false, replace: false, timeout: 5000, scrollTo: false});
+                        }
+                        //close editor
+                        imageManagerModule.editor.close();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("Error: item is not rotated");
+                    }
+                });
+            }else{
+                alert("Error: image can't rotate, no image isset set");
+            }
         }
     },
     //editor functions
@@ -467,6 +529,16 @@ $(document).ready(function () {
     //on click apply crop
     $(document).on("click", "#module-imagemanager .image-cropper .apply-crop-select", function (){
         imageManagerModule.editor.applyCrop(true);
+        return false;
+    });
+    //on click rotate clockwise
+    $(document).on("click", "#module-imagemanager .image-cropper .rotate-clockwise", function (){
+        imageManagerModule.editor.rotateClockwise();
+        return false;
+    });
+    //on click rotate counter clockwise
+    $(document).on("click", "#module-imagemanager .image-cropper .rotate-counter-clockwise", function (){
+        imageManagerModule.editor.rotateCounterClockwise();
         return false;
     });
     //on click cancel crop

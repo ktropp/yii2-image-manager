@@ -26,6 +26,17 @@ $this->title = Yii::t('imagemanager','Image manager');
                     </div>
                 </div>
                 <br>
+                <div class="rotate-buttons">
+                    <a href="#" class="btn btn-primary rotate-counter-clockwise">
+                        <i class="glyphicon glyphicon-repeat" style="transform: scaleX(-1);"></i>
+                        <span class="hidden-xs"><?=Yii::t('imagemanager','Otočit o 90° (proti směru)')?></span>
+                    </a>
+                    <a href="#" class="btn btn-primary rotate-clockwise">
+                        <i class="glyphicon glyphicon-repeat"></i>
+                        <span class="hidden-xs"><?=Yii::t('imagemanager','Otočit o 90° (po směru)')?></span>
+                    </a>
+                </div>
+                <br>
                 <div class="action-buttons">
                     <a href="#" class="btn btn-primary apply-crop">
                         <i class="fa fa-crop"></i>
