@@ -15,10 +15,10 @@ var imageManagerInput = {
 			var sModalHtml = '<div tabindex="-1" role="dialog" class="fade modal" id="modal-imagemanager">';
 				sModalHtml += '<div class="modal-dialog modal-lg">';
 					sModalHtml += '<div class="modal-content">';
-						sModalHtml += '<div class="modal-header">';
-							sModalHtml += '<button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>';
-							sModalHtml += '<h4>Image manager</h4>';
-						sModalHtml += '</div>';
+					sModalHtml += '<div class="modal-header">';
+						sModalHtml += '<h4 class="modal-title">Image manager</h4>';
+						sModalHtml += '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>';
+					sModalHtml += '</div>';
 						sModalHtml += '<div class="modal-body">';
 							sModalHtml += '<iframe src="#"></iframe>';
 						sModalHtml += '</div>';

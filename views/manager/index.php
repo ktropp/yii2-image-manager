@@ -155,56 +155,69 @@ $this->title = Yii::t('imagemanager','Image manager');
             <?= ListView::widget([
                 'dataProvider' => $dataProvider,
                 'itemOptions' => ['class' => 'item img-thumbnail'],
-                'layout' => "<div class='item-overview'>{items}</div> {pager}",
+                'options' => ['class' => 'list-view container-fluid p-1'],
+                'layout' => "<div class='item-overview row g-1'>{items}</div> {pager}",
                 'itemView' => function ($model, $key, $index, $widget) {
                     return $this->render("_item", ['model' => $model]);
                 },
+                'pager' => [
+                    'options' => ['class' => 'pagination mt-2'],
+                    'linkOptions' => ['class' => 'page-link'],
+                    'disabledPageCssClass' => 'disabled',
+                    'pageCssClass' => ['class' => 'page-item'],
+                    'prevPageCssClass' => 'page-back',
+                    'nextPageCssClass' => 'page-next',
+                    'firstPageCssClass' => 'page-first',
+                    'lastPageCssClass' => 'page-last',
+                    'nextPageLabel' => 'Další',
+                    'prevPageLabel' => 'Předchozí',
+                    'disabledListItemSubTagOptions' => ['class' => 'page-link']
+                ]
             ]) ?>
             <?php Pjax::end(); ?>
         </div>
         <div class="col-xs-6 col-sm-2 col-options">
-            <div class="form-group">
+            <div class="input-group">
                 <?=Html::textInput('input-mediamanager-search', null, ['id'=>'input-mediamanager-search', 'class'=>'form-control', 'placeholder'=>Yii::t('imagemanager','Search').'...'])?>
-            </div>
+                <?php
+                if (Yii::$app->controller->module->canUploadImage):
+                    ?>
 
-            <?php
-            if (Yii::$app->controller->module->canUploadImage):
-                ?>
-
-                <?=FileInput::widget([
-                'name' => 'imagemanagerFiles[]',
-                'id' => 'imagemanager-files',
-                'options' => [
-                    'multiple' => true,
-                    'accept' => 'image/*'
-                ],
-                'pluginOptions' => [
-                    'uploadUrl' => Url::to(['manager/upload']),
-                    'uploadExtraData' => [
-                        'folder_id' => isset(Yii::$app->request->get('ImageManagerSearch')['folder']) ? Yii::$app->request->get('ImageManagerSearch')['folder'] : '',
+                    <?=FileInput::widget([
+                    'name' => 'imagemanagerFiles[]',
+                    'id' => 'imagemanager-files',
+                    'options' => [
+                        'multiple' => true,
+                        'accept' => 'image/*'
                     ],
-                    'allowedFileExtensions' => \Yii::$app->controller->module->allowedFileExtensions,
-                    'uploadAsync' => false,
-                    'showPreview' => false,
-                    'showRemove' => false,
-                    'showUpload' => false,
-                    'showCancel' => false,
-                    'browseClass' => 'btn btn-primary btn-block',
-                    'browseIcon' => '<i class="fa fa-upload"></i> ',
-                    'browseLabel' => Yii::t('imagemanager','Upload')
-                ],
-                'pluginEvents' => [
-                    "filebatchselected" => "function(event, files){  $('.msg-invalid-file-extension').addClass('hide'); $(this).fileinput('upload'); }",
-                    "filebatchuploadsuccess" => "function(event, data, previewId, index) {
-						imageManagerModule.uploadSuccess(data.jqXHR.responseJSON.imagemanagerFiles);
-					}",
-                    "fileuploaderror" => "function(event, data) { $('.msg-invalid-file-extension').removeClass('hide'); }",
-                ],
-            ]) ?>
+                    'pluginOptions' => [
+                        'uploadUrl' => Url::to(['manager/upload']),
+                        'uploadExtraData' => [
+                            'folder_id' => isset(Yii::$app->request->get('ImageManagerSearch')['folder']) ? Yii::$app->request->get('ImageManagerSearch')['folder'] : '',
+                        ],
+                        'allowedFileExtensions' => \Yii::$app->controller->module->allowedFileExtensions,
+                        'uploadAsync' => false,
+                        'showPreview' => false,
+                        'showRemove' => false,
+                        'showUpload' => false,
+                        'showCancel' => false,
+                        'browseClass' => 'btn btn-primary btn-block',
+                        'browseIcon' => '<i class="fa fa-upload"></i> ',
+                        'browseLabel' => Yii::t('imagemanager','Upload')
+                    ],
+                    'pluginEvents' => [
+                        "filebatchselected" => "function(event, files){  $('.msg-invalid-file-extension').addClass('hide'); $(this).fileinput('upload'); }",
+                        "filebatchuploadsuccess" => "function(event, data, previewId, index) {
+                            imageManagerModule.uploadSuccess(data.jqXHR.responseJSON.imagemanagerFiles);
+                        }",
+                        "fileuploaderror" => "function(event, data) { $('.msg-invalid-file-extension').removeClass('hide'); }",
+                    ],
+                ]) ?>
 
-            <?php
-            endif;
-            ?>
+                <?php
+                endif;
+                ?>
+            </div>
 
             <div class="image-info hide">
                 <div class="thumbnail">

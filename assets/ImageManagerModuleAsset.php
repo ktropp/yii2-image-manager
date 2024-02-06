@@ -18,6 +18,6 @@ class ImageManagerModuleAsset extends AssetBundle
     ];
     public $depends = [
 		'yii\web\JqueryAsset',
-        'yii\bootstrap\BootstrapPluginAsset',
+        'yii\bootstrap5\BootstrapPluginAsset',
     ];
 }
