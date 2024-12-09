@@ -154,7 +154,7 @@ class ManagerController extends Controller {
                     if ($model->save()) {
                         //move file to dir
                         $sSaveFileName = $model->id . "_" . $model->fileHash . "." . $sFileExtension;
-                        if(in_array($sFileExtension, ['jpg', 'jpeg', 'JPG', 'png', 'gif'])){
+                        if(in_array($sFileExtension, ['jpg', 'jpeg', 'JPG', 'png'])){
                             //save with Imagine class
                             $image = Image::getImagine()->open($sTempFile);
 

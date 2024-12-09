@@ -92,7 +92,7 @@ class ImageManagerGetPath extends Component {
             $sImageFilePath = $sMediaPath . '/' . $mImageManager->id . '_' . $mImageManager->fileHash . '.' . $sFileExtension;
             //check file exists
             if (file_exists($sImageFilePath)) {
-                if(in_array($sFileExtension, ['jpg', 'jpeg', 'JPG', 'png', 'gif', 'svg'])){
+                if(in_array($sFileExtension, ['jpg', 'jpeg', 'JPG', 'png', 'svg'])){
                     $return = \Yii::$app->imageresize->getUrl($sImageFilePath, $width, $height, $thumbnailMode, null, $mImageManager->fileName);
                 }else{
                     $return = \Yii::$app->imageresize->getUrlFile($sImageFilePath, $mImageManager->fileName);
